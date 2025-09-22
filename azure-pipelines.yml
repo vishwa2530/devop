@@ -1,0 +1,25 @@
+trigger:
+- main  # This triggers the pipeline on pushes to the 'main' branch
+
+pool:
+  vmImage: 'ubuntu-latest'  # The VM image to run the pipeline on, typically Ubuntu
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'  # Specify the Python version to use
+    addToPath: true
+
+- task: Checkout@1  # Checkout the GitHub repository code
+  inputs:
+    repository: 'self'
+
+- script: |
+    python --version  # Check the Python version
+    pip install --upgrade pip  # Upgrade pip
+    pip install -r requirements.txt || echo "No requirements.txt found"  # Install dependencies if any
+  displayName: 'Install dependencies'
+
+- script: |
+    python hello.py  # Run the Python script
+  displayName: 'Run hello.py'
